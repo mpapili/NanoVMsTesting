@@ -52,19 +52,6 @@ Deploy a NanoVMs test app end-to-end. The app name is provided in $ARGUMENTS.
 
 ---
 
-## Why Skills + CLAUDE.md = Powerful Combo
-
-| Without Skills | With Skills |
-|---|---|
-| Re-explain context every session | CLAUDE.md carries persistent project context |
-| Type out long `ops` commands manually | One-word slash commands trigger full workflows |
-| Forget exact flags and sequences | Skills encode the correct procedure once |
-| Copy-paste from README | Claude reads README + runs skill in one step |
-
-The key insight: **CLAUDE.md handles the "what is this project" layer, skills handle the "how do I do X in this project" layer.** Together they make Claude Code feel like a team member who already knows the codebase.
-
----
-
 ## Setting Up Skills
 
 ```bash
