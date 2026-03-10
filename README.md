@@ -75,6 +75,46 @@ Locally-built (example: Docker binaries):
 ```bash
 rm -rf ~/.ops/local_packages/*
 ```
+## Doing the same thing but with Go — no Docker image needed
+
+With Node.js I pulled the runtime out of a Docker image because I didn't want node on my host. With Go it's different — Go compiles to a **static binary** with zero runtime dependencies, so there's no package to extract. The binary IS the package.
+
+I still don't want Go on my host though, so I used Docker just as a throwaway build container:
+
+```bash
+docker run --rm \
+  -v "$(pwd)/test-apps/go-hello:/app:Z" \
+  -w /app golang:1.21-alpine \
+  sh -c "CGO_ENABLED=0 GOOS=linux go build -o go-hello ."
+```
+
+`CGO_ENABLED=0` forces a fully static binary. `:Z` is the SELinux relabel flag required on Fedora. The container disappears and leaves behind just the binary.
+
+Verify it's actually static:
+```bash
+file test-apps/go-hello/go-hello
+# go-hello: ELF 64-bit LSB executable, x86-64, statically linked
+```
+
+Now run it directly — no package needed, just point `ops` at the binary:
+```bash
+ops run test-apps/go-hello/go-hello -p 8080
+```
+
+Test it:
+```bash
+curl localhost:8080/hello
+### Hello from the Unikernel!
+```
+
+The app lives in `test-apps/go-hello/` and serves `/hello` on port 8080.
+
+### Wrapped up in skills
+
+The build, run, and test steps above are captured as Claude Code skills so I don't have to remember the flags. See [SKILLS.md](./SKILLS.md) for the full definitions — `/ops-deploy` handles the Docker build + `ops run` + curl verification end-to-end.
+
+---
+
 ## pkg vs images vs instances
 
 A pkg is a reusable collection of raw dependencies (like a language runtime and its shared libraries), while an img is the final, immutable, bootable virtual machine disk that permanently fuses those dependencies together with your actual application code.
