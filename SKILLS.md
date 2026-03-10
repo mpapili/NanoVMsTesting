@@ -82,16 +82,9 @@ Skills live in `~/.claude/skills/` (global, not per-project). The `$ARGUMENTS` p
 
 ---
 
-## Other Skill Ideas for This Project
+## Skills for Documentation
 
-### `/ops-clean` — Nuke local packages and images
-
-```markdown
-Clean all local NanoVMs ops state:
-1. rm -rf ~/.ops/packages/*
-2. rm -rf ~/.ops/local_packages/*
-3. Confirm with: ops image list
-```
+Skills that help maintain and generate project documentation.
 
 ### `/ops-new-go-app` — Scaffold a new Go test app
 
@@ -101,4 +94,21 @@ Create a new Go test app named $ARGUMENTS in test-apps/$ARGUMENTS/:
 2. Write main.go with a /hello HTTP handler on port 8080
 3. Write go.mod with module name $ARGUMENTS and go 1.21
 4. Tell the user to run /ops-deploy $ARGUMENTS when ready
+```
+
+---
+
+## Skills for Operations
+
+Skills that execute, deploy, test, or clean up unikernel workloads.
+
+## Other Skill Ideas for This Project
+
+### `/ops-clean` — Nuke local packages and images
+
+```markdown
+Clean all local NanoVMs ops state:
+1. rm -rf ~/.ops/packages/*
+2. rm -rf ~/.ops/local_packages/*
+3. Confirm with: ops image list
 ```
