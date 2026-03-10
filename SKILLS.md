@@ -1,34 +1,35 @@
 # Claude Code Skills for NanoVMs
 
-This file demonstrates how **Claude Code skills** integrate with this project to speed up common `ops` workflows.
+Skills are prompt templates stored in `~/.claude/skills/`. Invoke with a slash command (e.g., `/ops-deploy`). The `$ARGUMENTS` placeholder receives everything typed after the command name.
 
-## What are Claude Code Skills?
-
-Skills are reusable prompt templates stored in `~/.claude/skills/`. You invoke them with a slash command (e.g., `/ops-deploy`). Claude Code expands the skill into a full prompt with your project context already loaded.
-
-Think of them as project-aware macros that combine:
-- Your CLAUDE.md project context
-- Parameterized instructions
-- Repeatable multi-step workflows
+```bash
+mkdir -p ~/.claude/skills
+# write a skill file, then invoke it:
+/my-skill some-argument
+```
 
 ---
 
-## Live Skill: `/ops-deploy`
+## Skills for Documentation
 
-**This skill is real and installed** at `~/.claude/skills/ops-deploy.md`.
+### `/ops-new-go-app` — Scaffold a new Go test app
 
-It handles the full lifecycle for any Go test app in `test-apps/`:
-1. Builds a static binary via Docker (`golang:1.21-alpine`, `CGO_ENABLED=0`, `:Z` SELinux flag)
-2. Boots the unikernel with `ops run`
-3. Curls `/hello` to verify it's alive
-4. Shows instance logs on failure
-
-**Try it:**
-```
-/ops-deploy go-hello
+```markdown
+Create a new Go test app named $ARGUMENTS in test-apps/$ARGUMENTS/:
+1. mkdir -p test-apps/$ARGUMENTS
+2. Write main.go with a /hello HTTP handler on port 8080
+3. Write go.mod with module name $ARGUMENTS and go 1.21
+4. Tell the user to run /ops-deploy $ARGUMENTS when ready
 ```
 
-**Skill definition** (`~/.claude/skills/ops-deploy.md`):
+---
+
+## Skills for Operations
+
+### `/ops-deploy` — Build and run a unikernel app
+
+Installed at `~/.claude/skills/ops-deploy.md`.
+
 ```markdown
 Deploy a NanoVMs test app end-to-end. The app name is provided in $ARGUMENTS.
 
@@ -50,48 +51,9 @@ Deploy a NanoVMs test app end-to-end. The app name is provided in $ARGUMENTS.
 5. Report success or show ops instance logs on failure.
 ```
 
----
+Usage: `/ops-deploy go-hello`
 
-## Setting Up Skills
-
-```bash
-# 1. Create the directory (already done on this machine)
-mkdir -p ~/.claude/skills
-
-# 2. Write a skill file — plain Markdown, natural language instructions
-nano ~/.claude/skills/my-skill.md
-
-# 3. Invoke it
-/my-skill some-argument
-```
-
-Skills live in `~/.claude/skills/` (global, not per-project). The `$ARGUMENTS` placeholder receives everything typed after the slash command name.
-
----
-
-## Skills for Documentation
-
-Skills that help maintain and generate project documentation.
-
-### `/ops-new-go-app` — Scaffold a new Go test app
-
-```markdown
-Create a new Go test app named $ARGUMENTS in test-apps/$ARGUMENTS/:
-1. mkdir -p test-apps/$ARGUMENTS
-2. Write main.go with a /hello HTTP handler on port 8080
-3. Write go.mod with module name $ARGUMENTS and go 1.21
-4. Tell the user to run /ops-deploy $ARGUMENTS when ready
-```
-
----
-
-## Skills for Operations
-
-Skills that execute, deploy, test, or clean up unikernel workloads.
-
-## Other Skill Ideas for This Project
-
-### `/ops-clean` — Nuke local packages and images
+### `/ops-clean` — Remove local packages and images
 
 ```markdown
 Clean all local NanoVMs ops state:
